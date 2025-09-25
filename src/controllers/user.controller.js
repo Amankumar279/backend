@@ -13,18 +13,18 @@ const registerUser = asyncHandler(async (req, res) => {
    //remove password and refresh token field from response
    //check for creation
    // return res
- const{fullname,email,username,password}=req.body
+ const{fullName,email,username,password}=req.body
   console.log("email:", email)
 // here some function takes argument and check after trim wheather it is empty 
  if(
-    [fullname,email,username,password].some((filed)=>
+    [fullName,email,username,password].some((filed)=>
     filed?.trim()==="")
  ){
     throw new ApiError(400,"All fields are required")
  }
 
  // here or operator check both the value 
-   const existedUser= User.findOne({
+   const existedUser= await User.findOne({
         $or:[{username},{email}]
     })
 
@@ -33,8 +33,9 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 // files option is given by multer like req .body given by express
 // here we take the first property [0] of the array bcoz it give path property of the file
-       const  avatarLocalpath = req.files?.avatar[0]?.path;
-       const coverImageLocalpath = req.files?.coverImage[0]?.path;
+       const  avatarLocalpath = req.files?.avatar?.[0]?.path;
+       const coverImageLocalpath = req.files?.coverImage?.[0]?.path;
+       console.log("avatarLocalpath:", avatarLocalpath)
     if(!avatarLocalpath){
         throw new ApiError(400, "avatar file is required");
     }
@@ -47,7 +48,7 @@ const registerUser = asyncHandler(async (req, res) => {
       }
 
      const user= await User.create({
-        fullname,
+        fullName,
         avatar:avatar.url,
         coverImage:coverImage?.url||"",
         email,
@@ -57,7 +58,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
       // here select function select exclude which is given and include all the variable
       // here we remove password and refresh token field from response
-      const createduser =awaitUser.findById(user._id).select(
+      const createduser = await User.findById(user._id).select(
         "-password -refreshToken"
       )
 
@@ -65,7 +66,7 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(500,"something went wrong while regestring the user")
       }
 
-      return res.status(201),json(
+      return res.status(201).json(
         new ApiResponse(200,createduser,"user registered successfully")
       )
 
