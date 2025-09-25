@@ -15,6 +15,7 @@ const registerUser = asyncHandler(async (req, res) => {
    // return res
  const{fullName,email,username,password}=req.body
   console.log("email:", email)
+
 // here some function takes argument and check after trim wheather it is empty 
  if(
     [fullName,email,username,password].some((filed)=>
@@ -37,6 +38,7 @@ const registerUser = asyncHandler(async (req, res) => {
        const coverImageLocalpath = req.files?.coverImage?.[0]?.path;
        console.log("avatarLocalpath:", avatarLocalpath)
     if(!avatarLocalpath){
+  
         throw new ApiError(400, "avatar file is required");
     }
       const avatar= await uploadOnCloudinary(avatarLocalpath)
