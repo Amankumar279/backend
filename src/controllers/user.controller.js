@@ -14,7 +14,7 @@ const registerUser = asyncHandler(async (req, res) => {
    //check for creation
    // return res
  const{fullName,email,username,password}=req.body
-  console.log("email:", email)
+
 
 // here some function takes argument and check after trim wheather it is empty 
  if(
@@ -34,9 +34,11 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 // files option is given by multer like req .body given by express
 // here we take the first property [0] of the array bcoz it give path property of the file
-       const  avatarLocalpath = req.files?.avatar?.[0]?.path;
+       const avatarLocalpath = req.files?.avatar?.[0]?.path;
        const coverImageLocalpath = req.files?.coverImage?.[0]?.path;
-       console.log("avatarLocalpath:", avatarLocalpath)
+       
+      
+
     if(!avatarLocalpath){
   
         throw new ApiError(400, "avatar file is required");
@@ -44,7 +46,7 @@ const registerUser = asyncHandler(async (req, res) => {
       const avatar= await uploadOnCloudinary(avatarLocalpath)
       const coverImage= await uploadOnCloudinary(coverImageLocalpath)
 
-
+      console.log("avatar :" ,avatar)
       if(!avatar){
         throw new ApiError(400,"avatar file is required")
       }
